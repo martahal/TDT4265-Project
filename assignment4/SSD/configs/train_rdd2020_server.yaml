@@ -3,8 +3,12 @@ MODEL:
     BACKBONE:
         NAME: 'basic'
         PRETRAINED: False
-        OUT_CHANNELS: [128, 256, 128, 128, 64, 64]
+        OUT_CHANNELS: [256, 512, 256, 256, 128, 128]
         INPUT_CHANNELS: 3
+    PRIORS:
+        MIN_SIZES: [[15, 15], [45, 45], [111, 111], [162, 162], [213, 213], [264, 264]]
+        MAX_SIZES: [[45, 45], [111, 111], [162, 162], [213, 213], [264, 264], [315, 315]]
+
 INPUT:
     IMAGE_SIZE: [300, 300]
 DATASETS:

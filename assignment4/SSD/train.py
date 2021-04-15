@@ -34,13 +34,27 @@ def start_train(cfg):
     logger = logging.getLogger('SSD.trainer')
     model = SSDDetector(cfg)
     model = torch_utils.to_cuda(model)
-
+    
     optimizer = torch.optim.SGD(
         model.parameters(),
         lr=cfg.SOLVER.LR,
         momentum=cfg.SOLVER.MOMENTUM,
         weight_decay=cfg.SOLVER.WEIGHT_DECAY
     )
+    """
+    optimizer = torch.optim.Adam(
+        model.parameters(),
+        lr=cfg.SOLVER.LR,
+        weight_decay=cfg.SOLVER.WEIGHT_DECAY
+    )
+    """
+    lr_scheduler = torch.optim.lr_scheduler.CyclicLR(
+        optimizer= optimizer,
+        base_lr= cfg.SOLVER.LR /10,
+        max_lr=cfg.SOLVER.LR*10,
+        step_size_up=1500,
+        mode='triangular2'
+        )
 
 
     arguments = {"iteration": 0}
@@ -56,7 +70,7 @@ def start_train(cfg):
 
     model = do_train(
         cfg, model, train_loader, optimizer,
-        checkpointer, arguments)
+        checkpointer, arguments, lr_scheduler)
     return model
 
 
