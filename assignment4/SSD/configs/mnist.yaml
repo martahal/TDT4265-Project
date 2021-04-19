@@ -1,7 +1,7 @@
 MODEL:
     NUM_CLASSES: 11
     BACKBONE:
-        NAME: 'basic'
+        NAME: 'improved_basic'
         PRETRAINED: False
         OUT_CHANNELS: [128, 256, 128, 128, 64, 64]
         INPUT_CHANNELS: 3
@@ -15,5 +15,5 @@ SOLVER:
     GAMMA: 0.1
     BATCH_SIZE: 16
     LR: 2e-3
-OUTPUT_DIR: 'outputs/basic'
+OUTPUT_DIR: 'outputs/improved_basic'
 DATASET_DIR: "datasets"

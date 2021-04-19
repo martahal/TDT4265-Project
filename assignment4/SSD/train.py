@@ -30,7 +30,7 @@ torch.backends.cudnn.benchmark = True
 torch.backends.cudnn.deterministic = True
 
 
-def start_train(cfg):
+def start_train(cfg, visualize_example=False):
     logger = logging.getLogger('SSD.trainer')
     model = SSDDetector(cfg)
     model = torch_utils.to_cuda(model)
@@ -70,7 +70,7 @@ def start_train(cfg):
 
     model = do_train(
         cfg, model, train_loader, optimizer,
-        checkpointer, arguments, lr_scheduler)
+        checkpointer, arguments, lr_scheduler, visualize_example)
     return model
 
 
@@ -93,24 +93,32 @@ def get_parser():
 
 
 def main():
-    args = get_parser().parse_args()
-    cfg.merge_from_file(args.config_file)
-    cfg.merge_from_list(args.opts)
+    #args = get_parser().parse_args()
+    # #cfg.merge_from_file(args.config_file)
+    #cfg.merge_from_list(args.opts)
+    config_file = "configs/train_rdd2020.yaml"
+    cfg.merge_from_file(config_file)
     cfg.freeze()
     output_dir = pathlib.Path(cfg.OUTPUT_DIR)
     output_dir.mkdir(exist_ok=True, parents=True)
 
     logger = setup_logger("SSD", output_dir)
-    logger.info(args)
 
-    logger.info("Loaded configuration file {}".format(args.config_file))
-    with open(args.config_file, "r") as cf:
+    logger.info("Loaded configuration file {}".format(config_file))
+    with open(config_file, "r") as cf:
         config_str = "\n" + cf.read()
         logger.info(config_str)
     logger.info("Running with config:\n{}".format(cfg))
+   #logger.info(args)
 
-    model = start_train(cfg)
+   #logger.info("Loaded configuration file {}".format(args.config_file))
+   #with open(args.config_file, "r") as cf:
+   #    config_str = "\n" + cf.read()
+   #    logger.info(config_str)
+   #logger.info("Running with config:\n{}".format(cfg))
 
+    #model = start_train(cfg)
+    model = start_train(cfg, visualize_example=True)
     logger.info('Start evaluating...')
     torch.cuda.empty_cache()  # speed up evaluating after training finished
     do_evaluation(cfg, model)
