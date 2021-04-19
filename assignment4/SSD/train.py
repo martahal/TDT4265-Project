@@ -33,6 +33,7 @@ torch.backends.cudnn.deterministic = True
 def start_train(cfg):
     logger = logging.getLogger('SSD.trainer')
     model = SSDDetector(cfg)
+    print(model)
     model = torch_utils.to_cuda(model)
     
     optimizer = torch.optim.SGD(
