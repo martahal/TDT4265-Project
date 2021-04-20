@@ -33,6 +33,7 @@ torch.backends.cudnn.deterministic = True
 def start_train(cfg):
     logger = logging.getLogger('SSD.trainer')
     model = SSDDetector(cfg)
+    print(model)
     model = torch_utils.to_cuda(model)
     
     optimizer = torch.optim.SGD(
@@ -48,6 +49,7 @@ def start_train(cfg):
         weight_decay=cfg.SOLVER.WEIGHT_DECAY
     )
     """
+
     lr_scheduler = torch.optim.lr_scheduler.CyclicLR(
         optimizer= optimizer,
         base_lr= cfg.SOLVER.LR /10,
@@ -70,7 +72,7 @@ def start_train(cfg):
 
     model = do_train(
         cfg, model, train_loader, optimizer,
-        checkpointer, arguments, lr_scheduler)
+        checkpointer, arguments, lr_scheduler=None)
     return model
 
 
