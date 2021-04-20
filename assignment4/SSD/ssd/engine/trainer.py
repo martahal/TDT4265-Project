@@ -26,8 +26,8 @@ def do_train(cfg, model,
              optimizer,
              checkpointer,
              arguments,
+             visualize_example=False,
              lr_scheduler = None,
-             visualize_example=False
             ):
     logger = logging.getLogger("SSD.trainer")
     logger.info("Start training ...")
