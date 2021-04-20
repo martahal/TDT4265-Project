@@ -8,6 +8,7 @@ import torch.utils.tensorboard
 from ssd.engine.inference import do_evaluation
 from ssd.utils.metric_logger import MetricLogger
 from ssd import torch_utils
+from visualize_training_data import show_training_image
 
 
 def write_metric(eval_result, prefix, summary_writer, global_step):
@@ -26,6 +27,7 @@ def do_train(cfg, model,
              checkpointer,
              arguments,
              lr_scheduler = None,
+             visualize_example=False
             ):
     logger = logging.getLogger("SSD.trainer")
     logger.info("Start training ...")
@@ -45,6 +47,12 @@ def do_train(cfg, model,
         arguments["iteration"] = iteration
         images = torch_utils.to_cuda(images)
         targets = torch_utils.to_cuda(targets)
+        if visualize_example:
+            show_training_image(images, targets)
+            print('This training was started only to visualize training images before training.\n '
+                  'If the training run stopped unintentionally, make sure visualize_example in start_train() '
+                  'method argument is set to False')
+            break
         loss_dict = model(images, targets=targets)
         loss = sum(loss for loss in loss_dict.values())
 

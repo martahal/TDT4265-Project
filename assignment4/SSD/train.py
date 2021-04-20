@@ -30,7 +30,7 @@ torch.backends.cudnn.benchmark = True
 torch.backends.cudnn.deterministic = True
 
 
-def start_train(cfg):
+def start_train(cfg, visualize_example=False):
     logger = logging.getLogger('SSD.trainer')
     model = SSDDetector(cfg)
     print(model)
@@ -72,7 +72,7 @@ def start_train(cfg):
 
     model = do_train(
         cfg, model, train_loader, optimizer,
-        checkpointer, arguments, lr_scheduler=None)
+        checkpointer, arguments, visualize_example, lr_scheduler=None)
     return model
 
 
