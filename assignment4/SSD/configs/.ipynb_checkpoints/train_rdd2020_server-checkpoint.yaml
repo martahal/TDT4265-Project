@@ -17,3 +17,5 @@ SOLVER:
     LR: 1e-3
 OUTPUT_DIR: 'outputs/rdd2020'
 DATASET_DIR: "datasets"
+MODEL_SAVE_STEP: 2000
+EVAL_STEP: 10000 
