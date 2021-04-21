@@ -53,8 +53,8 @@ def start_train(cfg, visualize_example=False):
     lr_scheduler = torch.optim.lr_scheduler.CyclicLR(
         optimizer= optimizer,
         base_lr= cfg.SOLVER.LR /10,
-        max_lr=cfg.SOLVER.LR*10,
-        step_size_up=1500,
+        max_lr=0.05,
+        step_size_up=8000,
         mode='triangular2'
         )
 
@@ -70,7 +70,7 @@ def start_train(cfg, visualize_example=False):
     max_iter = cfg.SOLVER.MAX_ITER
     train_loader = make_data_loader(cfg, is_train=True, max_iter=max_iter, start_iter=arguments['iteration'])
 
-    model = do_train(cfg, model, train_loader, optimizer, checkpointer, arguments, visualize_example, lr_scheduler=None)
+    model = do_train(cfg, model, train_loader, optimizer, checkpointer, arguments, visualize_example, lr_scheduler)
     return model
 
 
