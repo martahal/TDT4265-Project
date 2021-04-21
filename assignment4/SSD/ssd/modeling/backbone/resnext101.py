@@ -2,27 +2,29 @@ import torchvision
 import torch
 from torch import nn
 from collections import OrderedDict
-from torchvision.models.resnet import resnet18
+from torchvision.models.resnet import resnext101_32x8d
 
 
-class ResNetBackbone(torch.nn.Module):
+class ResNext101(torch.nn.Module):
     """
     A custom resnet backbone for SSD
     """
 
     def __init__(self, cfg):
         super().__init__()
-        self.model = resnet18(pretrained=cfg.MODEL.BACKBONE.PRETRAINED, progress=False)
+        self.model = resnext101_32x8d(pretrained=cfg.MODEL.BACKBONE.PRETRAINED, progress=False)
         output_channels = cfg.MODEL.BACKBONE.OUT_CHANNELS
         self.output_channels = output_channels
         image_channels = cfg.MODEL.BACKBONE.INPUT_CHANNELS
         self.image_channels = image_channels
         self.output_feature_shape = cfg.MODEL.PRIORS.FEATURE_MAPS
         self.feature_extractor = nn.Sequential(OrderedDict([
-            ('layer1', nn.Sequential(self.model.conv1, self.model.bn1, self.model.relu, self.model.maxpool, self.model.layer1, self.model.layer2)),
+            ('layer1',
+             nn.Sequential(self.model.conv1, self.model.bn1, self.model.relu, self.model.maxpool, self.model.layer1,
+                           self.model.layer2)),
             ('layer2', self.model.layer3),
             ('layer3', self.model.layer4),
-            ('layer4',  nn.Sequential(
+            ('layer4', nn.Sequential(
                 nn.ELU(),
                 nn.Conv2d(
                     in_channels=output_channels[2],
@@ -95,7 +97,7 @@ class ResNetBackbone(torch.nn.Module):
             shape(-1, output_channels[0], 38, 38),
         """
         # x = self.model(x)
- 
+
         l1_feature = self.feature_extractor.layer1(x)
         l2_feature = self.feature_extractor.layer2(l1_feature)
         l3_feature = self.feature_extractor.layer3(l2_feature)

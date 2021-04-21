@@ -7,6 +7,9 @@ def build_transforms(cfg, is_train=True):
     if is_train:
         transform = [
             ConvertFromInts(),
+            ToAbsoluteCoords(),
+            Expand(cfg.INPUT.PIXEL_MEAN),
+            RandomSampleCrop(),
             RandomMirror(),
             ToPercentCoords(),
             Resize(cfg.INPUT.IMAGE_SIZE),
