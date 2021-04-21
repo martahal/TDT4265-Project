@@ -14,6 +14,8 @@ SOLVER:
     MAX_ITER: 120000
     GAMMA: 0.1
     BATCH_SIZE: 16
-    LR: 1e-3
-OUTPUT_DIR: 'outputs/rdd2020'
+    LR: 1e-4
+OUTPUT_DIR: 'outputs/rdd2020_cyclic_lr'
 DATASET_DIR: "datasets"
+MODEL_SAVE_STEP: 2000
+EVAL_STEP: 10000 
