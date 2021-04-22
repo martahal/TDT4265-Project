@@ -1,6 +1,9 @@
 from ssd.modeling.box_head.prior_box import PriorBox
+
+from .random_erasing import RandomErasing
 from .target_transform import SSDTargetTransform
 from .transforms import *
+import albumentations as A
 
 
 def build_transforms(cfg, is_train=True):
@@ -9,7 +12,7 @@ def build_transforms(cfg, is_train=True):
             ConvertFromInts(),
             ToAbsoluteCoords(),
             Expand(cfg.INPUT.PIXEL_MEAN),
-            RandomSampleCrop(),
+            RandomErasing(),
             RandomMirror(),
             ToPercentCoords(),
             Resize(cfg.INPUT.IMAGE_SIZE),
