@@ -10,6 +10,7 @@ import torch
 
 
 # Copied from https://github.com/zhunzhong07/Random-Erasing/blob/master/transforms.py
+# Minor modifications have been applied to make it work with the code
 
 class RandomErasing(object):
     '''
@@ -30,13 +31,13 @@ class RandomErasing(object):
         self.sh = sh
         self.r1 = r1
 
-    def __call__(self, img):
+    def __call__(self, img, boxes, labels):
 
         if random.uniform(0, 1) > self.probability:
-            return img
+            return img, boxes, labels
 
         for attempt in range(100):
-            area = img.size()[1] * img.size()[2]
+            area = img.shape[1] * img.shape[2]
 
             target_area = random.uniform(self.sl, self.sh) * area
             aspect_ratio = random.uniform(self.r1, 1 / self.r1)
@@ -44,15 +45,15 @@ class RandomErasing(object):
             h = int(round(math.sqrt(target_area * aspect_ratio)))
             w = int(round(math.sqrt(target_area / aspect_ratio)))
 
-            if w < img.size()[2] and h < img.size()[1]:
-                x1 = random.randint(0, img.size()[1] - h)
-                y1 = random.randint(0, img.size()[2] - w)
-                if img.size()[0] == 3:
+            if w < img.shape[2] and h < img.shape[1]:
+                x1 = random.randint(0, img.shape[1] - h)
+                y1 = random.randint(0, img.shape[2] - w)
+                if img.shape[0] == 3:
                     img[0, x1:x1 + h, y1:y1 + w] = self.mean[0]
                     img[1, x1:x1 + h, y1:y1 + w] = self.mean[1]
                     img[2, x1:x1 + h, y1:y1 + w] = self.mean[2]
                 else:
                     img[0, x1:x1 + h, y1:y1 + w] = self.mean[0]
-                return img
+                return img, boxes, labels
 
-        return img
+        return img, boxes, labels
