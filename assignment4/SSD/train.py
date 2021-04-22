@@ -36,6 +36,7 @@ def start_train(cfg, visualize_example=False):
     print(model)
     model = torch_utils.to_cuda(model)
     
+    
     optimizer = torch.optim.SGD(
         model.parameters(),
         lr=cfg.SOLVER.LR,
@@ -49,8 +50,8 @@ def start_train(cfg, visualize_example=False):
         weight_decay=cfg.SOLVER.WEIGHT_DECAY
     )
     """
-
-    lr_scheduler = torch.optim.lr_scheduler.CyclicLR(
+    """
+        lr_scheduler = torch.optim.lr_scheduler.CyclicLR(
         optimizer= optimizer,
         base_lr= cfg.SOLVER.LR /10,
         max_lr=0.05,
@@ -58,6 +59,7 @@ def start_train(cfg, visualize_example=False):
         mode='triangular2'
         )
 
+    """
 
     arguments = {"iteration": 0}
     save_to_disk = True
@@ -70,7 +72,7 @@ def start_train(cfg, visualize_example=False):
     max_iter = cfg.SOLVER.MAX_ITER
     train_loader = make_data_loader(cfg, is_train=True, max_iter=max_iter, start_iter=arguments['iteration'])
 
-    model = do_train(cfg, model, train_loader, optimizer, checkpointer, arguments, visualize_example, lr_scheduler)
+    model = do_train(cfg, model, train_loader, optimizer, checkpointer, arguments, visualize_example, lr_scheduler=None)
     return model
 
 

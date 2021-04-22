@@ -10,10 +10,10 @@ def build_transforms(cfg, is_train=True):
     if is_train:
         transform = [
             ConvertFromInts(),
-            ToAbsoluteCoords(),
-            Expand(cfg.INPUT.PIXEL_MEAN),
-            RandomErasing(),
+            #ToAbsoluteCoords(),
+            #Expand(cfg.INPUT.PIXEL_MEAN),
             RandomMirror(),
+            RandomSampleCrop(),
             ToPercentCoords(),
             Resize(cfg.INPUT.IMAGE_SIZE),
             SubtractMeans(cfg.INPUT.PIXEL_MEAN,cfg.INPUT.PIXEL_STD),
