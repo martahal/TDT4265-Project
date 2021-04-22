@@ -1,20 +1,62 @@
 import os
 import xml.etree.ElementTree as ET
+import json
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 import random
 
-"""Reads the annotation xml-files and plots each bounding box in a height vs. width plot"""
 
-#loop over annotation files
-#loop over objects
 
-def find_bounding_boxes(dir, standard_image_size):
+def find_bounding_boxes_tdt(file_path, standard_image_size):
+    """
+    Args:
+        file_path: directory of annotation files for tdt dataset
+        standard_image_size: a tuple (height, width) always(1080,1920)
+
+    Returns:
+        bounding_boxes: a pandas dataframe of all gorund truth bounding boxes in the dataset.
+
+    """
+    bounding_boxes_table = {'type':[], 'height':[], 'width':[], 'cx':[], 'cy': [], 'size': []}
+    img_width = 1920
+    img_height =1080
+    f = open(file_path, )
+    data = json.load(f)
+    for annotation in data['annotations']:
+        cat_id = annotation['category_id']
+        if cat_id == 0:
+            type = 'D00'
+        elif cat_id == 1:
+            type = 'D10'
+        elif cat_id == 2:
+            type = 'D20'
+        elif cat_id == 3:
+            type = 'D40'
+        else:
+            type = 'Undefined'
+
+        [xmin, ymin, width, height] = annotation['bbox']
+        size = annotation['area']
+
+        cx, cy = calculate_bb_centers_tdt(xmin, ymin, width, height)
+        bounding_boxes_table['type'].append(type)
+        bounding_boxes_table['height'].append(int(round(height)))
+        bounding_boxes_table['width'].append(int(round(width)))
+        bounding_boxes_table['cx'].append(int(round(cx)))
+        bounding_boxes_table['cy'].append(int(round(cy)))
+        bounding_boxes_table['size'].append(int(round(size)))
+
+    bounding_boxes = pd.DataFrame(data=bounding_boxes_table)
+    return bounding_boxes
+
+
+def find_bounding_boxes_rdd(dir, standard_image_size):
     """
 
     Args:
-        dir: directory of annotation files
+        dir: directory of annotation files for rdd dataset
+        standard_image_size: a tuple (height, width) always(600,600)
 
     Returns:
         bounding_boxes: a pandas dataframe of all gorund truth bounding boxes in the dataset.
@@ -39,7 +81,7 @@ def find_bounding_boxes(dir, standard_image_size):
                 ymax = object.find('bndbox').find('ymax').text
 
                 height, width = calculate_width_and_height(int(xmin), int(ymin), int(xmax), int(ymax), int(img_width), int(img_height), standard_image_size)
-                cx, cy = calculate_bb_centers(int(xmin), int(ymin), int(xmax), int(ymax), int(img_width), int(img_width), standard_image_size)
+                cx, cy = calculate_bb_centers_rdd(int(xmin), int(ymin), int(xmax), int(ymax), int(img_width), int(img_width), standard_image_size)
                 bounding_boxes_table['type'].append(name)
                 bounding_boxes_table['height'].append(height)
                 bounding_boxes_table['width'].append(width)
@@ -57,24 +99,32 @@ def find_bounding_boxes(dir, standard_image_size):
 
 def calculate_width_and_height(xmin, ymin, xmax, ymax, img_width, img_height, std_image_size):
     # needs to normalize box sizes relative to input image sizes.
-    scale = std_image_size/img_width
+    scale_x = std_image_size[1]/img_width
+    scale_y = std_image_size[0]/img_height
     height = ymax - ymin
     width = xmax - xmin
-    return int(round(height*scale)), int(round(width*scale))
+    return int(round(height*scale_y)), int(round(width*scale_x))
 
-def calculate_bb_centers(xmin, ymin, xmax, ymax, img_width, img_height, std_image_size):
+
+def calculate_bb_centers_tdt(xmin, ymin, width, height):
+    cx = xmin + width / 2
+    cy = ymin + height / 2
+    return cx, cy
+
+def calculate_bb_centers_rdd(xmin, ymin, xmax, ymax, img_width, img_height, std_image_size):
     # needs to normalize box positions relative to input image sizes. Assuming square images
 
     # Note that pixel 0,0 is at the top left of the image, whereas 0,0 is in the bottom left of the plot
-    scale = std_image_size / img_width
-    height = int(round((ymax - ymin) * scale))
-    width = int(round((xmax - xmin) * scale))
+    scale_x = std_image_size[1] / img_width
+    scale_y = std_image_size[0]/ img_height
+    height = int(round((ymax - ymin) * scale_y))
+    width = int(round((xmax - xmin) * scale_x))
 
     cy_prime = ymin + (height//2)
     cx_prime = xmin + (width//2)
 
-    cy = std_image_size - cy_prime
-    cx = std_image_size - cx_prime
+    cy = std_image_size[1] - cy_prime
+    cx = std_image_size[0] - cx_prime
     return cx, cy
 
 def balance_bounding_boxes(bounding_boxes, n_samples = 1000):
@@ -114,41 +164,43 @@ def balance_bounding_boxes(bounding_boxes, n_samples = 1000):
     return balanced_bounding_boxes
 
 
-
-
-
-
-def plot_size_distribution(bounding_boxes):
+def plot_size_distribution(bounding_boxes, dataset_name, standard_image_size):
 
     bounding_boxes['height'].plot.hist(by="type",bins=100, alpha=0.5)
     bounding_boxes['width'].plot.hist(by="width", bins = 100, alpha=0.5)
     #bounding_boxes['size'].plot.hist(by="type", bins=1000, alpha=0.5)
     plt.xlabel('Number of pixels')
 
-    plt.xlim(0, 400)
-    plt.title('Distribution of bounding box height and width')
-    plt.savefig('figures/Bounding_box_h_w_distribution.png')
+    plt.xlim(0, standard_image_size[1])
+    plt.title(f'Distribution of bounding box height and width in {dataset_name}')
+    plt.savefig(f'figures/Bounding_box_h_w_distribution{dataset_name}.png')
     plt.show()
 
 
-def plot_width_vs_heights(bounding_boxes, centroids = None, plot_centroids = False):
+def plot_width_vs_heights(bounding_boxes, dataset_name,  centroids=None, standard_image_size=(600, 600), plot_centroids = False ):
     sns.scatterplot(data=bounding_boxes, x='width', y='height', hue='type', palette='pastel')
     if plot_centroids:
         sns.scatterplot(data=centroids, x='width', y='height', hue='type', palette='bright')
 
-    plt.title('Ground truth bounding box width vs height')
+    plt.title(f'Ground truth bounding box width vs height on {dataset_name} dataset')
 
-    plt.xlim(0, 600)
-    plt.ylim(0, 600)
-    plt.savefig('figures/Bounding_box_clusters_.png')
+    plt.xlim(0, standard_image_size[1])
+    plt.ylim(0, standard_image_size[0])
+    if dataset_name == 'TDT4265':
+        plt.savefig('figures/Bounding_box_clusters_TDT4265.png')
+    elif dataset_name == 'RDD2020':
+        plt.savefig('figures/Bounding_box_clusters_RDD2020.png')
     plt.show()
 
-def plot_bb_positions(bounding_boxes):
+def plot_bb_positions(bounding_boxes, dataset_name, standard_image_size):
     sns.scatterplot(data=bounding_boxes, x='cx', y='cy', hue='type', palette='bright')
-    plt.title('Ground truth bounding box positions in image')
-    plt.xlim(-50, 650)
-    plt.ylim(-50, 650)
-    plt.savefig('figures/Bounding_box_positions.png')
+    plt.title(f'Ground truth bounding box positions in {dataset_name} dataset')
+    plt.xlim(-50, standard_image_size[1])
+    plt.ylim(-50, standard_image_size[0])
+    if dataset_name == 'TDT4265':
+        plt.savefig('figures/Bounding_box_positions_TDT4265.png')
+    elif dataset_name == 'RDD2020':
+        plt.savefig('figures/Bounding_box_positions_RDD2020.png')
     plt.show()
 
 def find_min_and_max_bboxes(bounding_boxes):
@@ -238,14 +290,22 @@ def find_centroid_bboxes(bounding_boxes):
     return centroids
 
 def main():
-    bounding_boxes = find_bounding_boxes('datasets/RDD2020_filtered/Annotations', standard_image_size = 600)
+    #dataset_name = 'RDD2020'
+    #std_image_size = (600,600)
+    #bounding_boxes = find_bounding_boxes_rdd('datasets/RDD2020_filtered/Annotations', standard_image_size = std_image_size)
+
+
+    dataset_name =  'TDT4265'
+    std_image_size = (1080,1920)
+    bounding_boxes = find_bounding_boxes_tdt('datasets/tdt4265/labels.json', standard_image_size=std_image_size)
+    print(bounding_boxes.head(100))
     find_min_and_max_bboxes(bounding_boxes)
-    balanced = balance_bounding_boxes(bounding_boxes,n_samples=500)
+    balanced = balance_bounding_boxes(bounding_boxes,n_samples=1000)
     centroids = find_centroid_bboxes(bounding_boxes) # Must come after balancing bounding boxes
     #print(centroids)
-    plot_width_vs_heights(balanced, centroids, plot_centroids=True)
-    #plot_bb_positions(balanced)
-    #plot_size_distribution(bounding_boxes)
+    plot_width_vs_heights(balanced,dataset_name,  centroids, standard_image_size =std_image_size, plot_centroids=True,)
+    plot_bb_positions(balanced, dataset_name, standard_image_size =std_image_size )
+    plot_size_distribution(bounding_boxes,dataset_name, standard_image_size =std_image_size )
 
 if __name__ == '__main__':
     main()
