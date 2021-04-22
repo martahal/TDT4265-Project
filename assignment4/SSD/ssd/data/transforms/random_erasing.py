@@ -80,5 +80,3 @@ def visualize():
         img, boxes, labels = t(img, boxes, labels)
 
     cv2.imwrite('erasing.png', img)
-
-visualize()
