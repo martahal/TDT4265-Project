@@ -1,8 +1,6 @@
 from __future__ import absolute_import
 
 from torchvision.transforms import *
-from transforms import ConvertFromInts, ToAbsoluteCoords
-from contrast import Contrast
 from PIL import Image
 import random
 import math
@@ -66,17 +64,8 @@ class RandomErasing(object):
 
 
 def visualize():
-    transform = [
-        Contrast(),
-        ConvertFromInts(),
-        ToAbsoluteCoords(),
-        RandomErasing(),
-    ]
     # img = cv2.imread('../../../datasets/RDD2020_filtered/JPEGImages/Japan_007344.jpg', 1)
     img = cv2.imread('Image.png', 1)
     boxes = None
     labels = None
-    for t in transform:
-        img, boxes, labels = t(img, boxes, labels)
-
     cv2.imwrite('erasing.png', img)

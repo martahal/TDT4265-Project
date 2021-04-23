@@ -33,7 +33,7 @@ def mean_to_rgb_range(mean):
     return rgb_mean
 
 def main():
-    config_file = "configs/train_rdd2020_server_experimental.yaml"
+    config_file = "configs/train_rdd2020_server_experimental_contrast.yaml"
     cfg.merge_from_file(config_file)
     cfg.freeze()
     output_dir = pathlib.Path(cfg.OUTPUT_DIR)
