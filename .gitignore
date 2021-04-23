@@ -1,6 +1,7 @@
 **/__pycache__/**
 assignment4/SSD/datasets/
 assignment4/SSD/.ipynb_checkpoints/
+.ipynb_checkpoints/
 
 .idea/
 /assignment4/SSD/outputs/
