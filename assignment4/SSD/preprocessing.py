@@ -50,10 +50,10 @@ def main():
     max_iter = cfg.SOLVER.MAX_ITER
     train_loader = make_data_loader(cfg, is_train=True, max_iter=1000, start_iter=0)
 
-    #std, mean = calculate_std_and_mean(train_loader)
+    std, mean = calculate_std_and_mean(train_loader)
     # Found that std and mean have the values listed below:
-    std = np.array([0.1868, 0.1933, 0.2099])
-    mean = np.array([-0.0183,  0.0138,  0.0443])
+    # std = np.array([0.1868, 0.1933, 0.2099])
+    # mean = np.array([-0.0183,  0.0138,  0.0443])
 
     rgb_mean = mean_to_rgb_range(mean)
     print(std, mean)
