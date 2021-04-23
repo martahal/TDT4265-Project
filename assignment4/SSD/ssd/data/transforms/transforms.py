@@ -93,6 +93,9 @@ class SubtractMeans(object):
 
 class ToAbsoluteCoords(object):
     def __call__(self, image, boxes=None, labels=None):
+        if boxes is None:
+            return image, boxes, labels
+
         height, width, channels = image.shape
         boxes[:, 0] *= width
         boxes[:, 2] *= width
@@ -256,6 +259,9 @@ class Expand(object):
         expand_image[int(top):int(top + height),
         int(left):int(left + width)] = image
         image = expand_image
+
+        if boxes is None:
+            return image, boxes, labels
 
         boxes = boxes.copy()
         boxes[:, :2] += (int(left), int(top))

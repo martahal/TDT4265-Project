@@ -64,7 +64,8 @@ cfg.DATA_LOADER = CN()
 # Number of data loading threads
 cfg.DATA_LOADER.NUM_WORKERS = 4
 cfg.DATA_LOADER.PIN_MEMORY = True
-
+cfg.DATA_LOADER.RANDOM_ERASING = False
+cfg.DATA_LOADER.RANDOM_MIRROR = False
 # ---------------------------------------------------------------------------- #
 # Solver - The same as optimizer
 # ---------------------------------------------------------------------------- #

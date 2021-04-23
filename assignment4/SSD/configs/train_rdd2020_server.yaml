@@ -13,9 +13,10 @@ DATASETS:
 SOLVER:
     MAX_ITER: 120000
     GAMMA: 0.1
-    BATCH_SIZE: 16
-    LR: 1e-4
-OUTPUT_DIR: 'outputs/rdd2020_cyclic_lr'
+    BATCH_SIZE: 8 # NOTE CHANGED BATCH SIZE FROM 16 TO 8
+    LR: 1e-3
+    WEIGHT_DECAY: 5e-3 # INCREASED WEIGHT DECAY
+OUTPUT_DIR: 'outputs/rdd2020_weight_decay_5e3_batch_size_8_data_augmentation'
 DATASET_DIR: "datasets"
 MODEL_SAVE_STEP: 2000
 EVAL_STEP: 10000 
