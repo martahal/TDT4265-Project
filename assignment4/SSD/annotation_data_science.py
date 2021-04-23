@@ -206,12 +206,12 @@ def plot_size_distribution(bounding_boxes, dataset_name, standard_image_size):
 
     plt.xlim(0, standard_image_size[1] + 0.1 * standard_image_size[1])
     plt.title(f'Distribution of bounding box height and width in {dataset_name}')
-    plt.savefig(f'figures/Bounding_box_h_w_distribution{dataset_name}_with_scales.png')
+    #plt.savefig(f'figures/Bounding_box_h_w_distribution{dataset_name}_with_scales.png')
     plt.show()
 
 
 def plot_width_vs_heights(bounding_boxes, dataset_name,  centroids=None, standard_image_size=(600, 600), plot_centroids = False ):
-    plt.figure(figsize=(8,5))
+    plt.figure(figsize=(8,6))
     sns.scatterplot(data=bounding_boxes, x='width', y='height', hue='type', palette='pastel')
     if plot_centroids:
         sns.scatterplot(data=centroids, x='width', y='height', hue='type', palette='bright')
@@ -243,8 +243,8 @@ def plot_width_vs_heights(bounding_boxes, dataset_name,  centroids=None, standar
 
     plt.title(f'Ground truth bounding box width vs height on {dataset_name} dataset')
 
-    plt.xlim(0, standard_image_size[1] + 0.1 * standard_image_size[1])
-    plt.ylim(0, standard_image_size[0])
+    plt.xlim(0, 200) #standard_image_size[1] + 0.1 * standard_image_size[1])
+    plt.ylim(0, 400)# standard_image_size[0])
     #if dataset_name == 'TDT4265':
     #    plt.savefig('figures/Bounding_box_clusters_TDT4265_with_scales.png')
     #elif dataset_name == 'RDD2020':
@@ -361,7 +361,7 @@ def main():
     find_min_and_max_bboxes(bounding_boxes)
     balanced = balance_bounding_boxes(bounding_boxes,n_samples=1000)
     centroids = find_centroid_bboxes(bounding_boxes) # Must come after balancing bounding boxes
-    #print(centroids)
+    print(centroids)
     plot_width_vs_heights(balanced,dataset_name,  centroids, standard_image_size =std_image_size, plot_centroids=True,)
     #plot_bb_positions(balanced, dataset_name, standard_image_size =std_image_size )
     #plot_size_distribution(bounding_boxes,dataset_name, standard_image_size =std_image_size )

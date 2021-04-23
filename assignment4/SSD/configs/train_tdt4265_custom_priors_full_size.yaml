@@ -1,0 +1,26 @@
+MODEL:
+    NUM_CLASSES: 5
+    BACKBONE:
+        NAME: 'res_net'
+        PRETRAINED: True
+        OUT_CHANNELS: [128, 256, 512, 512, 256, 128]
+        INPUT_CHANNELS: 3
+    PRIORS:
+        MIN_SIZES: [[6, 11], [29, 54], [58, 109], [88, 162], [146, 271], [233, 434]] #size of bounding boxes for each feature map
+        MAX_SIZES: [[29, 54], [58, 109], [88, 162], [146, 271], [233, 434], [368, 682]]
+        FEATURE_MAPS: [[44, 82], [22, 41], [11, 21], [5, 10], [3, 6], [1, 2]]
+        STRIDES:  [[8, 8], [16, 16], [32, 31], [70, 65], [117, 109], [350, 325]] # set to image_size/feature_map_size
+        #These are the ones I want
+        ASPECT_RATIOS: [[4.6], [2, 6], [2, 8], [2.5, 12.5], [10], [15]]
+INPUT:
+    IMAGE_SIZE: [350,650]
+DATASETS:
+    TRAIN: ("tdt4265_train",)
+    TEST: ("tdt4265_val", )
+SOLVER:
+    MAX_ITER: 120000
+    GAMMA: 0.1
+    BATCH_SIZE: 16
+    LR: 1e-3
+OUTPUT_DIR: 'outputs/tdt4265_test'
+DATASET_DIR: "datasets"
