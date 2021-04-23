@@ -60,7 +60,7 @@ class ResNet18(torch.nn.Module):
                 ),
                 nn.BatchNorm2d(num_features=output_channels[4]))
              ),
-            ('layer6', nn.Sequential(
+            ('layer6', nn.Sequential( # For images with aspect ratio similar to 1080x1920 images
                 nn.ELU(),
                 nn.Conv2d(
                     in_channels=output_channels[4],
@@ -73,12 +73,31 @@ class ResNet18(torch.nn.Module):
                 nn.Conv2d(
                     in_channels=output_channels[4],
                     out_channels=output_channels[5],
-                    kernel_size=3,
-                    stride=2,
+                    kernel_size=2,
+                    stride=1,
                     padding=0
                 ),
                 nn.BatchNorm2d(num_features=output_channels[5]),
             ))
+            #('layer6', nn.Sequential(# For images with square aspect ratio 
+            #    nn.ELU(),
+            #    nn.Conv2d(
+            #        in_channels=output_channels[4],
+            #        out_channels=output_channels[4],
+            #        kernel_size=3,
+            #        stride=1,
+            #        padding=1
+            #    ),
+            #    nn.ELU(),
+            #    nn.Conv2d(
+            #        in_channels=output_channels[4],
+            #        out_channels=output_channels[5],
+            #        kernel_size=3,
+            #        stride=2,
+            #        padding=0
+            #    ),
+            #    nn.BatchNorm2d(num_features=output_channels[5]),
+            #))
         ]))
 
     def forward(self, x):

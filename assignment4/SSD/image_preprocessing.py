@@ -42,7 +42,7 @@ def higher_contrast(img_path, show_example):
     if show_example and not img_path:
         img = cv2.imread('datasets/RDD2020_filtered/JPEGImages/Japan_007376.jpg', 1)
 
-    lab = cv2.cvtColor(img, cv2.COLOR_RGB2LAB)
+    lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
     l, a, b = cv2.split(lab)
 
     clahe = cv2.createCLAHE(clipLimit=5.0, tileGridSize=(8, 8))
@@ -101,7 +101,7 @@ def copytree(src, dst, symlinks=False, ignore=None):
             shutil.copy2(s, d)
 
 def preprocess_images(should_copy):
-    preprocess_method = sharpening
+    preprocess_method = higher_contrast
     IN_FOLDER = 'datasets/RDD2020_filtered'
     OUT_FOLDER = 'datasets/RDD2020_filtered_contrast'
     IMAGE_FOLDER_NAME = 'JPEGImages'

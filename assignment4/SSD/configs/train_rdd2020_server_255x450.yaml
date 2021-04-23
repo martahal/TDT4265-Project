@@ -19,17 +19,13 @@ MODEL:
 
 INPUT:
     IMAGE_SIZE: [300, 300]
-    PIXEL_MEAN: [129.106, 133.046, 139.358]
-    PIXEL_STD: [0.273, 0.2721, 0.2664]
 DATASETS:
-    TRAIN: ("rdd2020_train_contrast",)
-    TEST: ("rdd2020_val_contrast", )
+    TRAIN: ("rdd2020_train",)
+    TEST: ("rdd2020_val", )
 SOLVER:
     MAX_ITER: 120000
     GAMMA: 0.1
     BATCH_SIZE: 16
     LR: 1e-3
-OUTPUT_DIR: 'outputs/rdd2020_experimentals_contrast_sharpen'
+OUTPUT_DIR: 'outputs/rdd2020_experimentals'
 DATASET_DIR: "datasets"
-MODEL_SAVE_STEP: 2000
-EVAL_STEP: 5000 
