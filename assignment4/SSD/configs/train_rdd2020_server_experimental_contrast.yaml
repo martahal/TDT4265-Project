@@ -20,12 +20,12 @@ MODEL:
 INPUT:
     IMAGE_SIZE: [300, 300]
 DATASETS:
-    TRAIN: ("rdd2020_train",)
-    TEST: ("rdd2020_val", )
+    TRAIN: ("rdd2020_train_contrast",)
+    TEST: ("rdd2020_val_contrast", )
 SOLVER:
     MAX_ITER: 120000
     GAMMA: 0.1
     BATCH_SIZE: 16
     LR: 1e-3
 OUTPUT_DIR: 'outputs/rdd2020_experimentals_contrast'
-DATASET_DIR: "datasets/RDD2020_filtered_contrast"
+DATASET_DIR: "datasets"

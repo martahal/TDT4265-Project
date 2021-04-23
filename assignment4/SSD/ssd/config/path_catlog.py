@@ -87,6 +87,14 @@ class DatasetCatalog:
         "rdd2020_val": {
             "data_dir": "RDD2020_filtered",
             "split": "val"
+        },
+        "rdd2020_train_contrast": {
+            "data_dir": "RDD2020_filtered_contrast",
+            "split": "train"
+        },
+        "rdd2020_val_contrast": {
+            "data_dir": "RDD2020_filtered_contrast",
+            "split": "val"
         }
 
     }
