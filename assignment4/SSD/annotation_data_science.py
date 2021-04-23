@@ -171,25 +171,84 @@ def plot_size_distribution(bounding_boxes, dataset_name, standard_image_size):
     #bounding_boxes['size'].plot.hist(by="type", bins=1000, alpha=0.5)
     plt.xlabel('Number of pixels')
 
-    plt.xlim(0, standard_image_size[1])
+    #Plotting vertical lines to illustrate scales determining size ranges
+    standard_scales = [0.1, 0.2, 0.37, 0.54, 0.71, 0.88, 1.05]
+    plt.vlines(x=standard_image_size[1] * standard_scales[0], ymin=0, ymax=10000, colors='tab:blue',
+               linestyles='dashed')
+    plt.vlines(x=standard_image_size[1] * standard_scales[1], ymin=0, ymax=10000, colors='tab:blue',
+               linestyles='dashed')
+    plt.vlines(x=standard_image_size[1] * standard_scales[2], ymin=0, ymax=10000, colors='tab:blue',
+               linestyles='dashed')
+    plt.vlines(x=standard_image_size[1] * standard_scales[3], ymin=0, ymax=10000, colors='tab:blue',
+               linestyles='dashed')
+    plt.vlines(x=standard_image_size[1] * standard_scales[4], ymin=0, ymax=10000, colors='tab:blue',
+               linestyles='dashed')
+    plt.vlines(x=standard_image_size[1] * standard_scales[5], ymin=0, ymax=10000, colors='tab:blue',
+               linestyles='dashed')
+    plt.vlines(x=standard_image_size[1] * standard_scales[6], ymin=0, ymax=10000, colors='tab:blue',
+               linestyles='dashed')
+
+    custom_scales = [0.0167, 0.083, 0.167, 0.25, 0.417, 0.67, 1.05]
+    plt.vlines(x=standard_image_size[1] * custom_scales[0], ymin=0, ymax=10000, colors='tab:orange',
+               linestyles='dashed')
+    plt.vlines(x=standard_image_size[1] * custom_scales[1], ymin=0, ymax=10000, colors='tab:orange',
+               linestyles='dashed')
+    plt.vlines(x=standard_image_size[1] * custom_scales[2], ymin=0, ymax=10000, colors='tab:orange',
+               linestyles='dashed')
+    plt.vlines(x=standard_image_size[1] * custom_scales[3], ymin=0, ymax=10000, colors='tab:orange',
+               linestyles='dashed')
+    plt.vlines(x=standard_image_size[1] * custom_scales[4], ymin=0, ymax=10000, colors='tab:orange',
+               linestyles='dashed')
+    plt.vlines(x=standard_image_size[1] * custom_scales[5], ymin=0, ymax=10000, colors='tab:orange',
+               linestyles='dashed')
+    plt.vlines(x=standard_image_size[1] * custom_scales[6], ymin=0, ymax=10000, colors='tab:orange',
+               linestyles='dashed')
+
+    plt.xlim(0, standard_image_size[1] + 0.1 * standard_image_size[1])
     plt.title(f'Distribution of bounding box height and width in {dataset_name}')
-    plt.savefig(f'figures/Bounding_box_h_w_distribution{dataset_name}.png')
+    plt.savefig(f'figures/Bounding_box_h_w_distribution{dataset_name}_with_scales.png')
     plt.show()
 
 
 def plot_width_vs_heights(bounding_boxes, dataset_name,  centroids=None, standard_image_size=(600, 600), plot_centroids = False ):
+    plt.figure(figsize=(8,5))
     sns.scatterplot(data=bounding_boxes, x='width', y='height', hue='type', palette='pastel')
     if plot_centroids:
         sns.scatterplot(data=centroids, x='width', y='height', hue='type', palette='bright')
+    # Plotting vertical lines to illustrate scales determining size ranges
+    standard_scales = [0.1, 0.2, 0.37, 0.54, 0.71, 0.88, 1.05 ]
+    plt.vlines(x=standard_image_size[1] * standard_scales[0], ymin=0, ymax=standard_image_size[0]*0.5, colors='tab:blue', linestyles='dashed')
+    plt.vlines(x=standard_image_size[1] * standard_scales[1], ymin=0, ymax=standard_image_size[0]*0.5, colors='tab:blue', linestyles='dashed')
+    plt.vlines(x=standard_image_size[1] * standard_scales[2], ymin=0, ymax=standard_image_size[0]*0.5, colors='tab:blue', linestyles='dashed')
+    plt.vlines(x=standard_image_size[1] * standard_scales[3], ymin=0, ymax=standard_image_size[0]*0.5, colors='tab:blue', linestyles='dashed')
+    plt.vlines(x=standard_image_size[1] * standard_scales[4], ymin=0, ymax=standard_image_size[0]*0.5, colors='tab:blue', linestyles='dashed')
+    plt.vlines(x=standard_image_size[1] * standard_scales[5], ymin=0, ymax=standard_image_size[0]*0.5, colors='tab:blue', linestyles='dashed')
+    plt.vlines(x=standard_image_size[1] * standard_scales[6], ymin=0, ymax=standard_image_size[0]*0.5, colors='tab:blue', linestyles='dashed')
+
+    custom_scales = [0.0167, 0.083, 0.167, 0.25, 0.417, 0.67, 1.05]
+    plt.vlines(x=standard_image_size[1] * custom_scales[0], ymin=0, ymax=standard_image_size[0]*0.5, colors='tab:orange',
+               linestyles='dashed')
+    plt.vlines(x=standard_image_size[1] * custom_scales[1], ymin=0, ymax=standard_image_size[0]*0.5, colors='tab:orange',
+               linestyles='dashed')
+    plt.vlines(x=standard_image_size[1] * custom_scales[2], ymin=0, ymax=standard_image_size[0]*0.5, colors='tab:orange',
+               linestyles='dashed')
+    plt.vlines(x=standard_image_size[1] * custom_scales[3], ymin=0, ymax=standard_image_size[0]*0.5, colors='tab:orange',
+               linestyles='dashed')
+    plt.vlines(x=standard_image_size[1] * custom_scales[4], ymin=0, ymax=standard_image_size[0]*0.5, colors='tab:orange',
+               linestyles='dashed')
+    plt.vlines(x=standard_image_size[1] * custom_scales[5], ymin=0, ymax=standard_image_size[0]*0.5, colors='tab:orange',
+               linestyles='dashed')
+    plt.vlines(x=standard_image_size[1] * custom_scales[6], ymin=0, ymax=standard_image_size[0]*0.5, colors='tab:orange',
+               linestyles='dashed')
 
     plt.title(f'Ground truth bounding box width vs height on {dataset_name} dataset')
 
-    plt.xlim(0, standard_image_size[1])
+    plt.xlim(0, standard_image_size[1] + 0.1 * standard_image_size[1])
     plt.ylim(0, standard_image_size[0])
-    if dataset_name == 'TDT4265':
-        plt.savefig('figures/Bounding_box_clusters_TDT4265.png')
-    elif dataset_name == 'RDD2020':
-        plt.savefig('figures/Bounding_box_clusters_RDD2020.png')
+    #if dataset_name == 'TDT4265':
+    #    plt.savefig('figures/Bounding_box_clusters_TDT4265_with_scales.png')
+    #elif dataset_name == 'RDD2020':
+    #    plt.savefig('figures/Bounding_box_clusters_RDD2020_with_scales.png')
     plt.show()
 
 def plot_bb_positions(bounding_boxes, dataset_name, standard_image_size):
@@ -197,10 +256,10 @@ def plot_bb_positions(bounding_boxes, dataset_name, standard_image_size):
     plt.title(f'Ground truth bounding box positions in {dataset_name} dataset')
     plt.xlim(-50, standard_image_size[1])
     plt.ylim(-50, standard_image_size[0])
-    if dataset_name == 'TDT4265':
-        plt.savefig('figures/Bounding_box_positions_TDT4265.png')
-    elif dataset_name == 'RDD2020':
-        plt.savefig('figures/Bounding_box_positions_RDD2020.png')
+    #if dataset_name == 'TDT4265':
+    #    plt.savefig('figures/Bounding_box_positions_TDT4265.png')
+    #elif dataset_name == 'RDD2020':
+    #    plt.savefig('figures/Bounding_box_positions_RDD2020.png')
     plt.show()
 
 def find_min_and_max_bboxes(bounding_boxes):
@@ -304,8 +363,8 @@ def main():
     centroids = find_centroid_bboxes(bounding_boxes) # Must come after balancing bounding boxes
     #print(centroids)
     plot_width_vs_heights(balanced,dataset_name,  centroids, standard_image_size =std_image_size, plot_centroids=True,)
-    plot_bb_positions(balanced, dataset_name, standard_image_size =std_image_size )
-    plot_size_distribution(bounding_boxes,dataset_name, standard_image_size =std_image_size )
+    #plot_bb_positions(balanced, dataset_name, standard_image_size =std_image_size )
+    #plot_size_distribution(bounding_boxes,dataset_name, standard_image_size =std_image_size )
 
 if __name__ == '__main__':
     main()
